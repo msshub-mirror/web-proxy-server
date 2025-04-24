@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プロキシテスト</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+    }
+    input, button, label {
+      padding: 0.5em;
+      font-size: 1em;
+      margin-bottom: 1em;
+      display: block;
+      width: 100%;
+      max-width: 600px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 1em;
+      white-space: pre-wrap;
+      word-break: break-word;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+    .checkbox-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      max-width: 600px;
+      margin-bottom: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>プロキシ経由でページ取得</h1>
+  <input id="urlInput" placeholder="https://example.com" />
+  
+  <div class="checkbox-wrapper">
+    <input type="checkbox" id="corsToggle" />
+    <label for="corsToggle">CORSヘッダーを付加する</label>
+  </div>
+
+  <button onclick="fetchViaProxy()">取得</button>
+  <pre id="output">ここに取得結果が表示されます</pre>
+
+  <script>
+    async function fetchViaProxy() {
+      const input = document.getElementById('urlInput').value;
+      const cors = document.getElementById('corsToggle').checked;
+      const proxyBase = '/proxy';
+
+      try {
+        const response = await fetch(`${proxyBase}?url=${encodeURIComponent(input)}&cors=${cors}`);
+        const text = await response.text();
+        document.getElementById('output').textContent = text;
+      } catch (e) {
+        document.getElementById('output').textContent = '取得失敗: ' + e;
+      }
+    }
+  </script>
+</body>
+</html>
