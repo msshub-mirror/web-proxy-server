@@ -16,14 +16,6 @@
       width: 100%;
       max-width: 600px;
     }
-    pre {
-      background: #f4f4f4;
-      padding: 1em;
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-width: 100%;
-      overflow-x: auto;
-    }
     .checkbox-wrapper {
       display: flex;
       align-items: center;
@@ -34,7 +26,7 @@
   </style>
 </head>
 <body>
-  <h1>プロキシ経由でページ取得</h1>
+  <h1>プロキシ経由でサイト表示</h1>
   <input id="urlInput" placeholder="https://example.com" />
   
   <div class="checkbox-wrapper">
@@ -42,22 +34,16 @@
     <label for="corsToggle">CORSヘッダーを付加する</label>
   </div>
 
-  <button onclick="fetchViaProxy()">取得</button>
-  <pre id="output">ここに取得結果が表示されます</pre>
+  <button onclick="openViaProxy()">新しいタブで表示</button>
 
   <script>
-    async function fetchViaProxy() {
+    function openViaProxy() {
       const input = document.getElementById('urlInput').value;
       const cors = document.getElementById('corsToggle').checked;
       const proxyBase = '/proxy';
 
-      try {
-        const response = await fetch(`${proxyBase}?url=${encodeURIComponent(input)}&cors=${cors}`);
-        const text = await response.text();
-        document.getElementById('output').textContent = text;
-      } catch (e) {
-        document.getElementById('output').textContent = '取得失敗: ' + e;
-      }
+      const proxyUrl = `${proxyBase}?url=${encodeURIComponent(input)}&cors=${cors}`;
+      window.open(proxyUrl, '_blank');
     }
   </script>
 </body>
