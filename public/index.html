@@ -2,12 +2,9 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>プロキシテスト</title>
+  <title>ServiceWorker付きプロキシ</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 2em;
-    }
+    body { font-family: sans-serif; margin: 2em; }
     input, button, label {
       padding: 0.5em;
       font-size: 1em;
@@ -26,24 +23,29 @@
   </style>
 </head>
 <body>
-  <h1>プロキシ経由でサイト表示</h1>
+  <h1>プロキシ経由で外部サイトを表示</h1>
   <input id="urlInput" placeholder="https://example.com" />
-  
   <div class="checkbox-wrapper">
     <input type="checkbox" id="corsToggle" />
     <label for="corsToggle">CORSヘッダーを付加する</label>
   </div>
-
   <button onclick="openViaProxy()">新しいタブで表示</button>
 
   <script>
-    function openViaProxy() {
+    async function openViaProxy() {
       const input = document.getElementById('urlInput').value;
       const cors = document.getElementById('corsToggle').checked;
-      const proxyBase = '/proxy';
-
-      const proxyUrl = `${proxyBase}?url=${encodeURIComponent(input)}&cors=${cors}`;
+      const proxyUrl = `/proxy?url=${encodeURIComponent(input)}&cors=${cors}`;
       window.open(proxyUrl, '_blank');
+    }
+
+    // Service Worker 登録
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(() => {
+        console.log('Service Worker registered');
+      }).catch(err => {
+        console.error('Service Worker registration failed:', err);
+      });
     }
   </script>
 </body>
